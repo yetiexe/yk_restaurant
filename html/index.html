@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YK Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="root" class="hidden">
+
+    <!-- ===================== MANAGEMENT APP ===================== -->
+    <div id="app-management" class="screen">
+      <aside class="sidebar">
+        <div class="brand">
+          <i class="fa-solid fa-utensils"></i>
+          <div>
+            <div class="brand-title">YK Restaurant</div>
+            <div class="brand-sub" id="brand-role">Manager</div>
+          </div>
+        </div>
+        <nav>
+          <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+          <button class="nav-btn" data-tab="personnel"><i class="fa-solid fa-users"></i> Personnel</button>
+          <button class="nav-btn owner-only" data-tab="menu"><i class="fa-solid fa-book-open"></i> Menu</button>
+          <button class="nav-btn" data-tab="stock"><i class="fa-solid fa-boxes-stacked"></i> Stock</button>
+          <button class="nav-btn" data-tab="order"><i class="fa-solid fa-truck-ramp-box"></i> Order Stock</button>
+          <button class="nav-btn owner-only" data-tab="account"><i class="fa-solid fa-building-columns"></i> Account</button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="balance-pill"><span>Balance</span><strong id="mg-balance">$0</strong></div>
+          <button class="close-btn" data-close><i class="fa-solid fa-right-from-bracket"></i> Close</button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <!-- Dashboard -->
+        <section class="tab active" data-tab="dashboard">
+          <h1>Dashboard</h1>
+          <div class="cards" id="dash-cards"></div>
+          <div class="grid-2">
+            <div class="panel">
+              <h2>Top Sellers</h2>
+              <div id="dash-top"></div>
+            </div>
+            <div class="panel">
+              <h2>Employee Sales</h2>
+              <div id="dash-emp"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Personnel -->
+        <section class="tab" data-tab="personnel">
+          <h1>Personnel</h1>
+          <div class="panel">
+            <div class="row-between">
+              <h2>Hire</h2>
+              <div class="hire-row">
+                <select id="hire-grade"></select>
+                <button class="btn primary" id="hire-nearest"><i class="fa-solid fa-user-plus"></i> Hire Nearest Player</button>
+              </div>
+            </div>
+            <p class="hint">Stand next to the person you want to hire, then click the button.</p>
+          </div>
+          <div class="panel">
+            <h2>Staff</h2>
+            <table class="tbl"><thead><tr><th>Name</th><th>Rank</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="staff-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Menu -->
+        <section class="tab" data-tab="menu">
+          <h1>Menu</h1>
+          <div class="grid-2">
+            <div class="panel">
+              <h2>Items</h2>
+              <div id="menu-list"></div>
+            </div>
+            <div class="panel">
+              <h2 id="menu-form-title">Add Item</h2>
+              <form id="menu-form">
+                <input type="hidden" id="m-id" />
+                <label>Name <input type="text" id="m-label" maxlength="60" required /></label>
+                <div class="form-row">
+                  <label>Category
+                    <select id="m-category"><option value="food">Food</option><option value="drink">Drink</option></select>
+                  </label>
+                  <label>Price ($) <input type="number" id="m-price" min="0" value="10" /></label>
+                </div>
+                <label>Icon URL
+                  <input type="text" id="m-icon" placeholder="https://..." />
+                </label>
+                <div class="icon-preview"><img id="m-icon-preview" alt="" /></div>
+                <h3>Ingredients</h3>
+                <div id="m-ingredients"></div>
+                <button type="button" class="btn ghost small" id="m-add-ing"><i class="fa-solid fa-plus"></i> Add Ingredient</button>
+                <div class="form-actions">
+                  <button type="submit" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                  <button type="button" class="btn ghost" id="m-reset">New</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stock -->
+        <section class="tab" data-tab="stock">
+          <h1>Stock</h1>
+          <div class="panel">
+            <h2>Ingredients in Stash</h2>
+            <div id="stock-list" class="stock-grid"></div>
+          </div>
+        </section>
+
+        <!-- Order Stock -->
+        <section class="tab" data-tab="order">
+          <h1>Order Stock</h1>
+          <div class="panel">
+            <p class="hint">Ordered ingredients are charged to the business and delivered to the restaurant stash.</p>
+            <div id="order-catalogue"></div>
+            <div class="order-footer">
+              <div>Total: <strong id="order-total">$0</strong></div>
+              <button class="btn primary" id="order-confirm"><i class="fa-solid fa-cart-shopping"></i> Place Order</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Account -->
+        <section class="tab" data-tab="account">
+          <h1>Account</h1>
+          <div class="grid-2">
+            <div class="panel">
+              <h2>Payroll</h2>
+              <p class="hint">Employees earn this share of their own sales, paid out daily.</p>
+              <label>Commission (%) <input type="number" id="acc-pct" min="0" max="40" /></label>
+              <button class="btn primary" id="acc-pct-save">Save</button>
+            </div>
+            <div class="panel">
+              <h2>Funds</h2>
+              <div class="balance-big" id="acc-balance">$0</div>
+              <label>Amount <input type="number" id="acc-amount" min="1" /></label>
+              <div class="form-actions">
+                <button class="btn primary" id="acc-deposit"><i class="fa-solid fa-arrow-down"></i> Deposit</button>
+                <button class="btn ghost" id="acc-withdraw"><i class="fa-solid fa-arrow-up"></i> Withdraw</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ===================== POS (REGISTER) ===================== -->
+    <div id="app-pos" class="screen modal">
+      <div class="modal-box pos-box">
+        <div class="modal-head">
+          <h1><i class="fa-solid fa-cash-register"></i> Register</h1>
+          <button class="icon-btn" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="pos-body">
+          <div class="pos-menu">
+            <div class="pos-tabs" role="tablist" aria-label="Menu categories">
+              <button class="pos-tab active" data-cat="food" type="button"><i class="fa-solid fa-burger"></i> Food</button>
+              <button class="pos-tab" data-cat="drink" type="button"><i class="fa-solid fa-martini-glass-citrus"></i> Drinks</button>
+            </div>
+            <div id="pos-items" class="pos-grid"></div>
+          </div>
+          <div class="pos-cart">
+            <div class="cart-head">
+              <h2>Order</h2>
+              <button class="icon-btn subtle" id="pos-clear" type="button" aria-label="Clear order"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <div id="pos-cart-list" class="cart-list"></div>
+            <div class="cart-total">Total <strong id="pos-total">$0</strong></div>
+            <button class="btn primary block" id="pos-charge"><i class="fa-solid fa-receipt"></i> Ring Up Order</button>
+            <p class="hint">The customer then pays at the register.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== WHOLESALE ORDER ===================== -->
+    <div id="app-order" class="screen modal">
+      <div class="modal-box">
+        <div class="modal-head">
+          <h1><i class="fa-solid fa-truck-ramp-box"></i> Food Wholesaler</h1>
+          <button class="icon-btn" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="wholesale-catalogue" class="wholesale-body"></div>
+        <div class="order-footer">
+          <div>Total: <strong id="wholesale-total">$0</strong></div>
+          <button class="btn primary" id="wholesale-confirm"><i class="fa-solid fa-cart-shopping"></i> Buy</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
